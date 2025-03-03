@@ -1,16 +1,20 @@
 import "./LoginBox.css";
-import React, { useEffect } from "react";
+import React, { SyntheticEvent, useEffect } from "react";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const LoginBox = () => {
   const baseUri = import.meta.env.VITE_API_URI;
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [open, setOpen] = useState(false);
   const { isAuthenticated, verifyAuth } = useAuth();
   const navigate = useNavigate();
 
@@ -36,7 +40,8 @@ const LoginBox = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData.message || "Login failed");
+        setErrorMessage(errorData.message || "Login failed");
+        setOpen(true);
         return;
       }
 
@@ -44,6 +49,16 @@ const LoginBox = () => {
     } catch (error) {
       console.log("An error occurred while trying to log in");
     }
+  };
+
+  const handleClose = (
+    _event?: SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -81,6 +96,21 @@ const LoginBox = () => {
                 <Button fullWidth type="submit" variant="contained">
                   Sign In
                 </Button>
+                <Snackbar
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                  open={open}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                >
+                  <Alert
+                    onClose={handleClose}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                  >
+                    {errorMessage}
+                  </Alert>
+                </Snackbar>
               </div>
             </div>
           </Box>

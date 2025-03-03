@@ -36,7 +36,9 @@
             ".devcontainer/**",
             "**/package.json",
             "**/Cargo.toml",
-            "*.code-workspace"
+            "*.code-workspace",
+            "*.env",
+            "*.env.development"
         ],
         "editor.inlayHints.enabled": "offUnlessPressed",
         "editor.renderWhitespace": "boundary",

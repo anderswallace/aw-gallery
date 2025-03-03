@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-
+import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -8,6 +7,8 @@ import { cameraOptions, allowedExtensions } from "../../constants/constants";
 import ImageUploadButton from "../ImageUploadButton/ImageUploadButton";
 import { ImageData } from "../../types";
 import { uploadPhotoForm } from "../../services/apiService";
+import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const PhotoUpload: React.FC = () => {
   const [cameraValue, setCameraValue] = useState<string | null>(
@@ -16,6 +17,7 @@ const PhotoUpload: React.FC = () => {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>("");
   const [filmValue, setFilmValue] = useState<string>("");
+  const [open, setOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,12 +50,11 @@ const PhotoUpload: React.FC = () => {
 
       try {
         const response = await uploadPhotoForm(imageData);
-        console.log(response.status);
 
         if (!response.ok) {
           console.log("Error uploading image");
         } else {
-          console.log("Success: ", response);
+          setOpen(true);
           setPhotoFile(null);
           setPhotoPreview("");
           setFilmValue("");
@@ -71,6 +72,16 @@ const PhotoUpload: React.FC = () => {
       alert("Please fill all fields before submitting");
       return;
     }
+  };
+
+  const handleClose = (
+    _event?: SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -120,6 +131,21 @@ const PhotoUpload: React.FC = () => {
             <Button disabled={!photoFile} onClick={handleFileUpload}>
               Upload
             </Button>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+            >
+              <Alert
+                onClose={handleClose}
+                severity="success"
+                variant="filled"
+                sx={{ width: "100%" }}
+              >
+                Upload Successful!
+              </Alert>
+            </Snackbar>
           </div>
         </Box>
       </div>
