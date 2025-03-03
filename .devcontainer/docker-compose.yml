@@ -1,0 +1,28 @@
+services:
+  # Devcontainer used by VSCode
+  dev:
+    build:
+      args:
+        USERNAME: anders
+        USER_UID: 1000
+        USER_GID: 1000
+      context: .
+      dockerfile: ./dockerfile
+    container_name: anders-dev
+    # Overrides default command so things don't shut down after the process ends.
+    # This is suggested by the example template provided in the VSCode
+    #   devcontainers GitHub repository here:
+    # https://github.com/devcontainers/templates/blob/b87588a3e3dfb5fff0dfe8527a21482a77fba0ad/src/docker-existing-docker-compose/.devcontainer/docker-compose.yml
+    command: sleep infinity
+    networks:
+      dev-net:
+        aliases:
+          - devcontainer.dev.net
+    stdin_open: true
+    tty: true
+    volumes:
+      - ..:/workspace:rw
+
+networks:
+  # Used to enable URL-based lookups of other containers
+  dev-net:

@@ -1,0 +1,42 @@
+.login-box-container {
+  margin-top: 160px;
+  max-width: 368px;
+  max-height: 368px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  gap: 15px;
+}
+
+.login-box-header {
+  color: var(--gray-900, #101828);
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 48px; /* 133.333% */
+  letter-spacing: -0.36px;
+}
+
+.login-box-form {
+  gap: 32px;
+  font-family: "Manrope", sans-serif;
+  width: 100%;
+}
+
+.login-input {
+  justify-content: center;
+}
+
+.login-submit-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.button-container {
+  width: 100%;
+}
