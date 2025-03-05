@@ -23,6 +23,30 @@ services:
     volumes:
       - ..:/workspace:rw
 
+  # Postgres DB used to store image data for each image uploaded to S3
+  photo-db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=photo_user
+      - POSTGRES_PASSWORD=photo_pw
+      - POSTGRES_DB=photo_metadata_db
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 60s
+      timeout: 15s
+      retries: 0
+      start_period: 30s
+    networks:
+      dev-net:
+        aliases:
+          - postgres-db.dev.net
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
+
 networks:
   # Used to enable URL-based lookups of other containers
   dev-net:
+
+volumes:
+  postgres-db-data:

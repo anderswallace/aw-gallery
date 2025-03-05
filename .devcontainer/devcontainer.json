@@ -1,8 +1,6 @@
 {
   "name": "Linux Dev Container",
-  "dockerComposeFile": [
-    "docker-compose.yml"
-  ],
+  "dockerComposeFile": ["docker-compose.yml"],
   "service": "dev",
   "workspaceFolder": "/workspace/",
   "customizations": {
@@ -20,7 +18,8 @@
         "streetsidesoftware.code-spell-checker",
         "timonwong.shellcheck",
         "yzhang.markdown-all-in-one",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "Prisma.prisma"
       ]
     }
   }
