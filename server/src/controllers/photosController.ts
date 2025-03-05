@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { config } from "../config/config.js";
-import { uploadFile } from "../services/s3Service.js";
+import { uploadFile, generatePresignedUrl } from "../services/s3Service.js";
 import { v4 as uuidv4 } from "uuid";
 import { uploadMetadata } from "../services/databaseService.js";
 
@@ -37,10 +37,10 @@ export const createPhoto = async (req: Request, res: Response) => {
   };
 
   try {
-    // TODO: take S3 Object URL and upload to database along with metadata
-    const fileUrl = await uploadFile(photo);
-    await uploadMetadata(fileUrl, photo);
-    res.status(200).json({ message: `Uploaded file URL is: ${fileUrl}` });
+    const fileKey = await uploadFile(photo);
+    const signedUrl = await generatePresignedUrl(fileKey);
+    await uploadMetadata(signedUrl, photo);
+    res.status(200).json({ message: `Uploaded file URL is: ${signedUrl}` });
     return;
   } catch (error) {
     console.error("Error uploading file to S3", error);

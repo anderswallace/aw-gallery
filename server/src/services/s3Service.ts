@@ -1,7 +1,11 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { config } from "../config/config.js";
-import upload from "../config/multerConfig.js";
 import { Photo } from "../controllers/photosController.js";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const s3 = new S3Client({
   region: config.awsRegion,
@@ -11,6 +15,7 @@ const s3 = new S3Client({
   },
 });
 
+// Uploads file to AWS and returns its AWS Key
 export const uploadFile = async (photo: Photo): Promise<string> => {
   const params = {
     Bucket: config.awsBucketName,
@@ -23,10 +28,27 @@ export const uploadFile = async (photo: Photo): Promise<string> => {
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
-    const fileUrl = `https://${config.awsBucketName}.s3.${config.awsRegion}.amazonaws.com/images/${photo.file.originalname}/${photo.id}`;
-    return fileUrl;
+    return params.Key;
   } catch (error) {
     console.error("Error uploading file to S3: ", error);
     throw new Error("Error uploading file to S3");
+  }
+};
+
+// Take AWS Key as input and generate a S3 Pre-Signed URL
+export const generatePresignedUrl = async (key: string): Promise<string> => {
+  const params = {
+    Bucket: config.awsBucketName,
+    Key: key,
+  };
+
+  const command = new GetObjectCommand(params);
+
+  try {
+    const signedUrl = await getSignedUrl(s3, command, { expiresIn: 604800 }); // 7 days lifetime for the signed link
+    return signedUrl;
+  } catch (error) {
+    console.error("Error generating signed URL: ", error);
+    throw new Error("Error generating signed URL");
   }
 };
