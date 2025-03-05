@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { config } from "../config/config.js";
 import { uploadFile } from "../services/s3Service.js";
 import { v4 as uuidv4 } from "uuid";
+import { uploadMetadata } from "../services/databaseService.js";
 
 export interface Photo {
   id: string;
@@ -38,6 +39,7 @@ export const createPhoto = async (req: Request, res: Response) => {
   try {
     // TODO: take S3 Object URL and upload to database along with metadata
     const fileUrl = await uploadFile(photo);
+    await uploadMetadata(fileUrl, photo);
     res.status(200).json({ message: `Uploaded file URL is: ${fileUrl}` });
     return;
   } catch (error) {
