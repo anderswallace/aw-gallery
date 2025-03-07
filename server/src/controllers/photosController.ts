@@ -4,7 +4,7 @@ import { uploadFile, generatePresignedUrl } from "../services/s3Service.js";
 import { v4 as uuidv4 } from "uuid";
 import { uploadMetadata } from "../services/databaseService.js";
 
-export interface Photo {
+export interface Image {
   id: string;
   camera: string;
   film: string;
@@ -29,7 +29,7 @@ export const createPhoto = async (req: Request, res: Response) => {
 
   const { camera, film } = req.body;
 
-  const photo: Photo = {
+  const photo: Image = {
     id: uuidv4(),
     camera: camera,
     film: film,

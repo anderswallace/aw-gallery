@@ -4,7 +4,7 @@ import {
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import { config } from "../config/config.js";
-import { Photo } from "../controllers/photosController.js";
+import { Image } from "../controllers/photosController.js";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const s3 = new S3Client({
@@ -16,7 +16,7 @@ const s3 = new S3Client({
 });
 
 // Uploads file to AWS and returns its AWS Key
-export const uploadFile = async (photo: Photo): Promise<string> => {
+export const uploadFile = async (photo: Image): Promise<string> => {
   const params = {
     Bucket: config.awsBucketName,
     Key: `images/${photo.file.originalname}/${photo.id}`,
