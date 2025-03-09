@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router";
 import LoginPage from "./pages/LoginPage.tsx";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
+import HomePage from "./pages/HomePage.tsx";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminPage />} />
