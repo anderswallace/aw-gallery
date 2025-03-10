@@ -20,17 +20,18 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Photos</h1>
-      <div>
-        {photos.map((photo) => (
-          <PhotoImage
-            key={photo.id}
-            url={photo.url}
-            camera={photo.camera}
-            film={photo.film}
-          />
-        ))}
+    <div className="flex justify-center items-center min-h-screen mb-10">
+      <div className="w-full max-w-[1000px] px-4">
+        <div className="flex flex-col items-center gap-20">
+          {photos.map((photo) => (
+            <PhotoImage
+              key={photo.id}
+              url={photo.url}
+              camera={photo.camera}
+              film={photo.film}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
