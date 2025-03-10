@@ -9,6 +9,7 @@ import { ImageData } from "../../types";
 import { uploadPhotoForm } from "../../services/apiService";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import imageCompression from "browser-image-compression";
 
 const PhotoUpload: React.FC = () => {
   const [cameraValue, setCameraValue] = useState<string | null>(
@@ -19,6 +20,12 @@ const PhotoUpload: React.FC = () => {
   const [filmValue, setFilmValue] = useState<string>("");
   const [open, setOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const options = {
+    maxWidth: 934,
+    maxSizeMB: 1,
+    useWebWorker: true,
+    fileType: "image/webp",
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -42,10 +49,17 @@ const PhotoUpload: React.FC = () => {
 
   const handleFileUpload = async () => {
     if (cameraValue !== null && photoFile !== null && filmValue !== "") {
+      const compressedFile = await imageCompression(photoFile, options);
+      const compressedFileWithName = new File(
+        [compressedFile],
+        photoFile.name,
+        { type: compressedFile.type }
+      );
+
       const imageData: ImageData = {
         camera: cameraValue,
         film: filmValue,
-        content: photoFile,
+        content: compressedFileWithName,
       };
 
       try {
@@ -63,8 +77,6 @@ const PhotoUpload: React.FC = () => {
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
-
-        // TODO: Handle behavior for consecutive uploads
       } catch (err) {
         console.error("Failed to upload data: ", err);
       }

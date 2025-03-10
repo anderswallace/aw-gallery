@@ -23,6 +23,7 @@ RUN apt-get update -y && \
 		ca-certificates \
 		locales \
 		pkg-config \
+		tzdata \
 		# Developer tools
 		curl \
 		git \
@@ -72,6 +73,7 @@ USER $USERNAME
 # Note that using `${PATH}` and `$PATH` may have different behavior according
 #   to https://github.com/moby/moby/issues/42863. For safety, prefer `$PATH`.
 ENV PATH="$PATH:/home/$USERNAME/.local/bin"
+ENV TZ="America/Chicago"
 
 # Install non-apt package/binaries
 RUN mkdir -p "$HOME/.local/bin" && \

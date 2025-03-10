@@ -1,4 +1,5 @@
 import { ImageData } from "../types";
+import { Photo } from "../types";
 
 const baseUri = import.meta.env.VITE_API_URI;
 
@@ -22,6 +23,24 @@ export const uploadPhotoForm = async (imageData: ImageData) => {
     return response;
   } catch (err) {
     console.error("Error submitting form data: ", err);
+    throw err;
+  }
+};
+
+export const getPhotos = async (): Promise<Photo[]> => {
+  try {
+    const response = await fetch(`${baseUri}/data`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const data: Photo[] = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error getting photos: ", err);
     throw err;
   }
 };
