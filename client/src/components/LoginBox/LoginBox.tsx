@@ -75,8 +75,8 @@ const LoginBox = () => {
             }}
           >
             <TextField
-              id="outlined-controlled-email"
-              label="Email"
+              id="outlined-controlled-username"
+              label="Username"
               value={username}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setUsername(event.target.value);
