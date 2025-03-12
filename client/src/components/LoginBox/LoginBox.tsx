@@ -21,8 +21,6 @@ const LoginBox = () => {
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/admin");
-    } else {
-      console.log("Authentication failed");
     }
   }, [isAuthenticated, navigate]);
 
