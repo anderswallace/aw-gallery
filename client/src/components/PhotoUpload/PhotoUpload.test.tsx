@@ -85,6 +85,42 @@ describe("PhotoUpload Component", () => {
     expect(filmInput).toHaveValue("UltraMax 400");
   });
 
+  test("Create alert when not all forms are filled but file submitted", async () => {
+    const alertMock = vi.fn();
+    global.alert = alertMock;
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <PhotoUpload />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    const cameraInput = screen.getByLabelText("Camera");
+    const submitButton = screen.getByText("Upload");
+
+    // Make data inputs, leaving film input blank
+    fireEvent.mouseDown(cameraInput);
+    const option = await screen.findByText("Canon AE-1");
+    fireEvent.click(option);
+
+    // Create new file
+    const fileInput = screen.getByLabelText("Upload files");
+    const mockFile = new File(["file content"], "image.jpg", {
+      type: "image/jpg",
+    });
+
+    // File change event
+    fireEvent.change(fileInput, { target: { files: [mockFile] } });
+
+    // Upload file
+    fireEvent.click(submitButton);
+
+    expect(alertMock).toHaveBeenCalledWith(
+      "Please fill all fields before submitting"
+    );
+  });
+
   test("Upload file successfully, dismiss success snackbar", async () => {
     const mockUploadResponse = { ok: true };
     (uploadPhotoForm as jest.Mock).mockResolvedValue(mockUploadResponse);
