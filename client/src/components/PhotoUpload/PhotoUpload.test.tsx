@@ -53,9 +53,9 @@ describe("PhotoUpload Component", () => {
 
     // Expect the input fields and buttons to exist
     expect(screen.getByLabelText("Camera")).toBeInTheDocument();
+    expect(screen.getByLabelText("Film")).toBeInTheDocument();
     expect(screen.getByText("Upload files")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Upload" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Film")).toBeInTheDocument();
   });
 
   test("Handle input changes", async () => {
@@ -85,7 +85,7 @@ describe("PhotoUpload Component", () => {
     expect(filmInput).toHaveValue("UltraMax 400");
   });
 
-  test("Upload file successfully", async () => {
+  test("Upload file successfully, dismiss success snackbar", async () => {
     const mockUploadResponse = { ok: true };
     (uploadPhotoForm as jest.Mock).mockResolvedValue(mockUploadResponse);
     render(
@@ -127,6 +127,37 @@ describe("PhotoUpload Component", () => {
         film: "UltraMax 400",
         content: expect.any(File),
       })
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", code: "Escape", keyCode: 27 });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("alert")).toBeNull();
+    });
+  });
+
+  test("Create alert for unsupported file type", async () => {
+    const alertMock = vi.fn();
+    global.alert = alertMock;
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <PhotoUpload />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    // Create new file with non-image type
+    const fileInput = screen.getByLabelText("Upload files");
+    const mockIncorrectFile = new File(["file content"], "image.pdf", {
+      type: "application/pdf",
+    });
+
+    // File change event
+    fireEvent.change(fileInput, { target: { files: [mockIncorrectFile] } });
+
+    expect(alertMock).toHaveBeenCalledWith(
+      "Invalid file type. Allowed types: jpg, jpeg, png, svg"
     );
   });
 

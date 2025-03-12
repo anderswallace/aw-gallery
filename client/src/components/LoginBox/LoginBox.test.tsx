@@ -3,9 +3,10 @@ import { AuthProvider, useAuth } from "../../context/AuthContext";
 import { describe, vi, expect } from "vitest";
 import { beforeEach } from "node:test";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, useNavigate } from "react-router";
 import "@testing-library/jest-dom/vitest";
 import { ReactNode } from "react";
+import axios from "axios";
 
 // Mock useAuth hook for AuthProvider wrapping this component
 vi.mock("../../context/AuthContext", () => ({
@@ -17,6 +18,15 @@ vi.mock("../../context/AuthContext", () => ({
     <div>{children}</div>
   ),
 }));
+
+vi.mock("react-router", () => ({
+  useNavigate: vi.fn(),
+  MemoryRouter: ({ children }: { children: ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
+
+vi.mock("axios");
 
 global.fetch = vi.fn();
 
@@ -96,14 +106,25 @@ describe("LoginBox", () => {
     });
   });
 
-  test("Navigate to admin page on successful login", async () => {
-    const mockVerifyAuth = vi.fn();
+  test("Trigger cookie authentication call on successful login", async () => {
+    const mockVerifyAuth = vi.fn().mockImplementation(async () => {
+      await axios.get(`{baseUri}/auth/verify`, { withCredentials: true });
+    });
     const mockLogin = vi.fn();
+    const mockNavigate = vi.fn();
+
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
 
     vi.mocked(useAuth).mockReturnValue({
       isAuthenticated: false,
       verifyAuth: mockVerifyAuth,
       login: mockLogin,
+    });
+
+    // Successful API call for checking JWT
+    axios.get = vi.fn().mockResolvedValueOnce({
+      status: 200,
+      data: { message: "Login successful" },
     });
 
     // successful response from login endpoint
@@ -129,9 +150,36 @@ describe("LoginBox", () => {
     fireEvent.change(passwordInput, { target: { value: "password" } });
     fireEvent.click(submitButton);
 
-    // expect verifyAuth to be called here
     await waitFor(() => {
       expect(mockVerifyAuth).toHaveBeenCalled();
     });
+
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  test("Navigate to admin page when authenticated", () => {
+    const mockLogin = vi.fn();
+    const mockNavigate = vi.fn();
+    const mockVerifyAuth = vi.fn();
+
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
+
+    vi.mocked(useAuth).mockReturnValue({
+      isAuthenticated: true,
+      verifyAuth: mockVerifyAuth,
+      login: mockLogin,
+    });
+
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <LoginBox />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    expect(mockNavigate).toBeCalledTimes(1);
   });
 });
