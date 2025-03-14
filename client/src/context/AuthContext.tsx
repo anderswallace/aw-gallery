@@ -9,7 +9,6 @@ import axios from "axios";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
   verifyAuth: () => Promise<void>;
 }
 
@@ -20,8 +19,6 @@ const baseUri = import.meta.env.VITE_API_URI;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const login = () => setIsAuthenticated(true);
 
   const verifyAuth = async (): Promise<void> => {
     try {
@@ -57,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, verifyAuth }}>
+    <AuthContext.Provider value={{ isAuthenticated, verifyAuth }}>
       {!isLoading && children}
     </AuthContext.Provider>
   );

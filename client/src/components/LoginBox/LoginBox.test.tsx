@@ -110,7 +110,6 @@ describe("LoginBox", () => {
     const mockVerifyAuth = vi.fn().mockImplementation(async () => {
       await axios.get(`{baseUri}/auth/verify`, { withCredentials: true });
     });
-    const mockLogin = vi.fn();
     const mockNavigate = vi.fn();
 
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
@@ -118,7 +117,6 @@ describe("LoginBox", () => {
     vi.mocked(useAuth).mockReturnValue({
       isAuthenticated: false,
       verifyAuth: mockVerifyAuth,
-      login: mockLogin,
     });
 
     // Successful API call for checking JWT
@@ -160,7 +158,6 @@ describe("LoginBox", () => {
   });
 
   test("Navigate to admin page when authenticated", () => {
-    const mockLogin = vi.fn();
     const mockNavigate = vi.fn();
     const mockVerifyAuth = vi.fn();
 
@@ -169,7 +166,6 @@ describe("LoginBox", () => {
     vi.mocked(useAuth).mockReturnValue({
       isAuthenticated: true,
       verifyAuth: mockVerifyAuth,
-      login: mockLogin,
     });
 
     render(

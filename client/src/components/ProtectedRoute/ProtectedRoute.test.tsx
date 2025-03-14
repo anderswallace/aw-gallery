@@ -36,13 +36,11 @@ describe("ProtectedRoute", () => {
   });
 
   test("Navigate to /login when unauthenticated", () => {
-    const mockLogin = vi.fn();
     const mockVerifyAuth = vi.fn();
 
     vi.mocked(useAuth).mockReturnValue({
       isAuthenticated: false,
       verifyAuth: mockVerifyAuth,
-      login: mockLogin,
     });
 
     render(
@@ -57,13 +55,11 @@ describe("ProtectedRoute", () => {
   });
 
   test("Return Outlet component when authenticated", () => {
-    const mockLogin = vi.fn();
     const mockVerifyAuth = vi.fn();
 
     vi.mocked(useAuth).mockReturnValue({
       isAuthenticated: true,
       verifyAuth: mockVerifyAuth,
-      login: mockLogin,
     });
 
     render(
