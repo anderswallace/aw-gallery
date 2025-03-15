@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
-import { describe, vi, expect } from "vitest";
+import { describe, vi, expect, Mock } from "vitest";
 import { AuthProvider } from "../../context/AuthContext";
 import PhotoUpload from "./PhotoUpload";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
@@ -123,7 +123,8 @@ describe("PhotoUpload Component", () => {
 
   test("Upload file successfully, dismiss success snackbar", async () => {
     const mockUploadResponse = { ok: true };
-    (uploadPhotoForm as jest.Mock).mockResolvedValue(mockUploadResponse);
+    const mockedUploadPhotoForm = uploadPhotoForm as Mock;
+    mockedUploadPhotoForm.mockResolvedValue(mockUploadResponse);
     render(
       <MemoryRouter>
         <AuthProvider>
@@ -196,8 +197,4 @@ describe("PhotoUpload Component", () => {
       "Invalid file type. Allowed types: jpg, jpeg, png, svg"
     );
   });
-
-  // TODO: Finish tests for following lines
-  // 90-97
-  // 121-122
 });
