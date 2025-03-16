@@ -5,7 +5,7 @@
       "request": "launch",
       "runtimeArgs": ["run", "test"],
       "runtimeExecutable": "npm",
-      //"skipFiles": ["<node_internals>/**"],
+      "skipFiles": ["<node_internals>/**"],
       "type": "node",
       "cwd": "${workspaceFolder:Server}"
     }

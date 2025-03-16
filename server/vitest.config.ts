@@ -9,7 +9,12 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text"],
-      exclude: ["**/node_modules/**", "**/*config*/**", "**/*types/**"],
+      exclude: [
+        "**/node_modules/**",
+        "**/*config*/**",
+        "**/*types/**",
+        "**/dist/**",
+      ],
       all: true,
       // outputDirectory: './coverage',
     },
