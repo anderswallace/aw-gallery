@@ -1,6 +1,6 @@
 import { describe, expect, vi, test, Mock } from "vitest";
 import request from "supertest";
-import express, { response } from "express";
+import express from "express";
 import { afterEach, beforeEach } from "node:test";
 import cookieParser from "cookie-parser";
 import dataRoutes from "../routes/dataRoutes";
