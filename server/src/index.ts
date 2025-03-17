@@ -5,7 +5,6 @@ import dataRoutes from "./routes/dataRoutes.js";
 import cors from "cors";
 import { authenticateToken } from "./middleware/authMiddleware.js";
 import cookieParser from "cookie-parser";
-import { seed } from "./services/databaseService.js";
 import { PrismaClient } from "@prisma/client";
 
 const app = express();
