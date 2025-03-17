@@ -61,6 +61,7 @@ export const fetchPhotos = async (): Promise<Photo[]> => {
 };
 
 // seed database with placeholder data for testing
+/*
 async function seedPhotos() {
   const photos = Array.from({ length: 10 }).map(() => ({
     id: faker.string.uuid(),
@@ -93,3 +94,4 @@ async function seed() {
 }
 
 export { seed };
+*/
