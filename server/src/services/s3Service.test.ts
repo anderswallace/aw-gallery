@@ -3,7 +3,7 @@ import { afterEach } from "node:test";
 import { Image } from "../controllers/photosController";
 import { Readable } from "stream";
 import { generatePresignedUrl, uploadFile } from "./s3Service";
-import { S3Client } from "@aws-sdk/client-s3"; // now imports our mocked version
+import { S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // Mock the AWS SDK module inline to avoid hoisting issues.
