@@ -21,6 +21,19 @@ vi.mock("jsonwebtoken", async () => {
   };
 });
 
+vi.mock("../config/config", async () => {
+  const mockedConfig = (await vi.importActual("../config/config")) as {
+    config: any;
+  };
+  return {
+    config: {
+      ...mockedConfig.config,
+      adminUsername: "adminUsername",
+      adminPassword: "adminPassword",
+    },
+  };
+});
+
 describe("authController", () => {
   beforeEach(() => {
     vi.clearAllMocks();
