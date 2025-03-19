@@ -1,7 +1,7 @@
 import { ImageData } from "../types";
 import { Photo } from "../types";
 
-const baseUri = import.meta.env.VITE_API_URI;
+const baseUri = import.meta.env.VITE_API_URI || "http://localhost:4000";
 
 export const uploadPhotoForm = async (imageData: ImageData) => {
   const formData = new FormData();

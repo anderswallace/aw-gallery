@@ -1,4 +1,3 @@
-import express from "express";
 import authRoutes from "./routes/authRoutes.js";
 import photosRoutes from "./routes/photosRoutes.js";
 import dataRoutes from "./routes/dataRoutes.js";
@@ -7,9 +6,21 @@ import { authenticateToken } from "./middleware/authMiddleware.js";
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 import rateLimit from "express-rate-limit";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+dotenv.config({ path: path.resolve(__dirname, "../", envFile) });
+
+import express from "express";
+import { config } from "./config/config.js";
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const prisma = new PrismaClient();
 
 const authRateLimiter = rateLimit({
@@ -34,10 +45,22 @@ async function initializeServer() {
 
     app.use(
       cors({
-        origin: "http://localhost:5173",
+        origin: (origin, callback) => {
+          if (!origin || origin === config.allowedOrigins) {
+            callback(null, origin);
+          } else {
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
         credentials: true,
       })
     );
+
+    app.use((req, res, next) => {
+      console.log("Incoming request from origin:", req.headers.origin);
+      console.log("CORS Origin Allowed:", config.allowedOrigins);
+      next();
+    });
     app.use(cookieParser());
     app.use(express.json());
 

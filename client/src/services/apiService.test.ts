@@ -1,7 +1,7 @@
 import { describe, vi, expect } from "vitest";
 import { beforeEach } from "node:test";
 import "@testing-library/jest-dom/vitest";
-import { ImageData, Photo } from "../types";
+import { ImageData } from "../types";
 import { uploadPhotoForm, getPhotos } from "./apiService";
 
 global.fetch = vi.fn();
@@ -32,6 +32,9 @@ describe("apiService", () => {
   });
 
   test("Throw error when uploading photo fails", async () => {
+    // Suppress error output in console
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
     });

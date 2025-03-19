@@ -1,0 +1,59 @@
+services:
+  postgres-db:
+    image: postgres:13
+    container_name: postgres-db-prod
+    restart: always
+    env_file:
+      - server/.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-photo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-photo_pw}
+      POSTGRES_DB: ${POSTGRES_DB:-photo_metadata_db}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
+    networks:
+      - test-net
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    container_name: backend
+    depends_on:
+      - postgres-db
+    env_file:
+      - server/.env.test
+    environment:
+      - NODE_ENV=test
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./server:/app
+    command: ["node", "./dist/index.js"]
+    networks:
+      - test-net
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    container_name: frontend
+    depends_on:
+      - backend
+    env_file:
+      - client/.env.production
+    ports:
+      - "5174:80"
+    volumes:
+      - ./client:/app
+      - ./client/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - test-net
+
+volumes:
+  postgres-db-data:
+
+networks:
+  test-net:
