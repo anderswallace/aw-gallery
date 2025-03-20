@@ -55,12 +55,6 @@ async function initializeServer() {
         credentials: true,
       })
     );
-
-    app.use((req, res, next) => {
-      console.log("Incoming request from origin:", req.headers.origin);
-      console.log("CORS Origin Allowed:", config.allowedOrigins);
-      next();
-    });
     app.use(cookieParser());
     app.use(express.json());
 
