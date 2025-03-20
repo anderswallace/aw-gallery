@@ -2,8 +2,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// Check for required environment variables at runtime
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
+
 export const config = {
-  jwtSecretKey: process.env.JWT_SECRET || "secret-key",
+  jwtSecretKey: process.env.JWT_SECRET || "",
   adminUsername: process.env.USERNAME,
   adminPassword: process.env.PASSWORD,
   awsAccessKey: process.env.AWS_ACCESS_KEY || "",

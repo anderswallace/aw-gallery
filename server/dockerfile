@@ -1,18 +1,32 @@
-FROM node:20
+# Build stage
+FROM node:20 AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --only=production
+RUN npm install --omit=dev
 
 # Copy the built server files
 COPY . .
 
 # Compile TypeScript Code
-RUN npx tsc
+RUN npm run build
 
 # Generate Prisma client
 RUN npx prisma generate
+
+# Production Image
+FROM node:20 AS production
+
+WORKDIR /app
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./
+COPY --from=build /app/prisma ./prisma
+
+# Set environment variable for production
+ENV NODE_ENV=production
 
 EXPOSE 4002
 

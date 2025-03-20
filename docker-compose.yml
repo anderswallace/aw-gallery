@@ -31,8 +31,6 @@ services:
         condition: service_healthy  # wait for database
     env_file:
       - server/.env.test
-    environment:
-      - NODE_ENV=test
     ports:
       - "4002:4002"
     volumes:
@@ -47,8 +45,6 @@ services:
     container_name: frontend
     depends_on:
       - backend
-    env_file:
-      - client/.env.production
     ports:
       - "5174:80"
     volumes:
