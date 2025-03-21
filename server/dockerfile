@@ -4,25 +4,29 @@ FROM node:20 AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm install
 
-# Copy the built server files
 COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
 
 # Compile TypeScript Code
 RUN npm run build
 
-# Generate Prisma client
-RUN npx prisma generate
+# Prune dev dependencies
+RUN npm prune --omit=dev
 
 # Production Image
 FROM node:20 AS production
 
 WORKDIR /app
 
-COPY --from=build /app/dist ./dist
+# Copy runtime dependencies only
 COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./
+COPY --from=build /app/package*.json ./
+
+COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 
 # Set environment variable for production
