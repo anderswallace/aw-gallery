@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export const config = {
-  jwtSecretKey: process.env.JWT_SECRET || "",
+  jwtSecretKey: process.env.JWT_SECRET || "jwt-secret",
   adminUsername: process.env.USERNAME,
   adminPassword: process.env.PASSWORD,
   awsAccessKey: process.env.AWS_ACCESS_KEY || "",
