@@ -1,15 +1,38 @@
-FROM node:18
+# Build stage
+FROM node:20 AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --only=production
+RUN npm install
 
-# Copy the built server files
 COPY . .
 
-RUN npx tsc
+# Generate Prisma client
+RUN npx prisma generate
 
-EXPOSE 4000
+# Compile TypeScript Code
+RUN npm run build
 
-CMD [ "node", "./dist/index.js" ]
+# Prune dev dependencies
+RUN npm prune --omit=dev
+
+# Production Image
+FROM node:20 AS production
+
+WORKDIR /app
+
+# Copy runtime dependencies only
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package*.json ./
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/prisma ./prisma
+
+# Set environment variable for production
+ENV NODE_ENV=production
+
+EXPOSE 4002
+
+# Run database migrations before starting the server
+CMD ["sh", "-c", "npx prisma migrate deploy && node ./dist/index.js"]

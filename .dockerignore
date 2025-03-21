@@ -1,0 +1,7 @@
+.env
+.env.test
+.env.production
+*.log
+node_modules
+dist
+docker-compose*

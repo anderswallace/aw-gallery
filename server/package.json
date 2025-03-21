@@ -5,7 +5,8 @@
   "scripts": {
     "start": "npx tsc-watch --noClear -p tsconfig.json --onSuccess \"node ./dist/index.js\"",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

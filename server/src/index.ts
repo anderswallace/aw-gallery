@@ -20,7 +20,8 @@ import express from "express";
 import { config } from "./config/config.js";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = Number(process.env.PORT) || 4000;
+const HOST = "0.0.0.0";
 const prisma = new PrismaClient();
 
 const authRateLimiter = rateLimit({
@@ -55,12 +56,6 @@ async function initializeServer() {
         credentials: true,
       })
     );
-
-    app.use((req, res, next) => {
-      console.log("Incoming request from origin:", req.headers.origin);
-      console.log("CORS Origin Allowed:", config.allowedOrigins);
-      next();
-    });
     app.use(cookieParser());
     app.use(express.json());
 
@@ -68,8 +63,8 @@ async function initializeServer() {
     app.use("/photos", authRateLimiter, authenticateToken, photosRoutes);
     app.use("/data", apiRateLimiter, dataRoutes);
 
-    app.listen(PORT, () => {
-      console.log(`Server now running on port: http://localhost:${PORT}`);
+    app.listen(PORT, HOST, () => {
+      console.log(`Server now running on port: http://${HOST}:${PORT}`);
     });
   } catch (error) {
     console.error("Error while initializing server and seeding: ", error);

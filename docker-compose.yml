@@ -15,6 +15,11 @@ services:
       - postgres-db-data:/var/lib/postgresql/data
     networks:
       - test-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "photo_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -22,16 +27,14 @@ services:
       dockerfile: dockerfile
     container_name: backend
     depends_on:
-      - postgres-db
+      postgres-db:
+        condition: service_healthy  # wait for database
     env_file:
       - server/.env.test
-    environment:
-      - NODE_ENV=test
     ports:
-      - "4001:4001"
+      - "4002:4002"
     volumes:
       - ./server:/app
-    command: ["node", "./dist/index.js"]
     networks:
       - test-net
 
@@ -42,8 +45,6 @@ services:
     container_name: frontend
     depends_on:
       - backend
-    env_file:
-      - client/.env.production
     ports:
       - "5174:80"
     volumes:
