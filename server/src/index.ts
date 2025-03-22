@@ -36,7 +36,7 @@ const authRateLimiter = rateLimit({
 const apiRateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 min window
   max: 50,
-  message: "Too many requests. Please slow down.",
+  message: "Too many requests. Please slow down",
 });
 
 async function initializeServer() {
