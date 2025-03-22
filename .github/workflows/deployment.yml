@@ -27,6 +27,7 @@ jobs:
 
             - name: Build and Push Client Image
               run: |
+                echo "VITE_API_URI: ${{ secrets.VITE_API_URI }}"
                 docker build \
                   --build-arg VITE_API_URI=${{ secrets.VITE_API_URI }} \
                   -t ${{ secrets.DOCKERHUB_USERNAME }}/client:latest ./client
