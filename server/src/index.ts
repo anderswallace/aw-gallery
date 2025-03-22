@@ -44,6 +44,11 @@ async function initializeServer() {
     //console.log("Checking if database is seeded...");
     //await seed();
 
+    app.use((req, res, next) => {
+      console.log(`[${req.method}] ${req.url}`);
+      next();
+    });
+
     app.use(
       cors({
         origin: (origin, callback) => {
