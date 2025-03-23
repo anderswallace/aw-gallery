@@ -1,6 +1,6 @@
 # AW Gallery
 
-A full-stack image gallery and admin panel for uploading, viewing, and managing personal film photos. Visit here: [andersgallery.dev](andersgallery.dev)
+A full-stack image gallery and admin panel for uploading, viewing, and managing personal film photos. Visit here: [andersgallery.dev](https://andersgallery.dev)
 
 ## Tech Stack
 
