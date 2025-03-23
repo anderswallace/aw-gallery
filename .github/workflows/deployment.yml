@@ -32,17 +32,15 @@ jobs:
             - name: Build and Push Client Image
               run: |
                 echo "VITE_API_URI: ${{ secrets.VITE_API_URI }}"
-                docker buildx build \
+                docker buildx build --push \
                   --build-arg VITE_API_URI=${{ secrets.VITE_API_URI }} \
                   -t ${{ secrets.DOCKERHUB_USERNAME }}/client:latest \
                   -t ${{ secrets.DOCKERHUB_USERNAME }}/client:${{ github.sha }} \
-                  --push \
                   ./client
       
             - name: Build and Push Server Image
               run: |
-                docker buildx build \
+                docker buildx build --push \
                   -t ${{ secrets.DOCKERHUB_USERNAME }}/server:latest \
                   -t ${{ secrets.DOCKERHUB_USERNAME }}/server:${{ github.sha }} \
-                  --push \
                   ./server
