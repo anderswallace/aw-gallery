@@ -26,17 +26,21 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push Client Image
-        run: |
-          echo "VITE_API_URI: ${{ secrets.VITE_API_URI }}"
-          docker buildx build --push \
-            --build-arg VITE_API_URI=${{ secrets.VITE_API_URI }} \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/client:latest \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/client:${{ github.sha }} \
-            ./client
+        env:
+          VITE_API_URI: ${{ secrets.VITE_API_URI }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: >
+          docker buildx build --push
+          --build-arg VITE_API_URI=$VITE_API_URI
+          -t $DOCKERHUB_USERNAME/client:latest
+          -t $DOCKERHUB_USERNAME/client:${{ github.sha }}
+          ./client
 
       - name: Build and Push Server Image
-        run: |
-          docker buildx build --push \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/server:latest \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/server:${{ github.sha }} \
-            ./server
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: >
+          docker buildx build --push
+          -t $DOCKERHUB_USERNAME/server:latest
+          -t $DOCKERHUB_USERNAME/server:${{ github.sha }}
+          ./server
