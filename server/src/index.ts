@@ -64,9 +64,9 @@ async function initializeServer() {
     app.use(cookieParser());
     app.use(express.json());
 
-    app.use("/auth", authRateLimiter, authRoutes);
-    app.use("/photos", authRateLimiter, authenticateToken, photosRoutes);
-    app.use("/data", apiRateLimiter, dataRoutes);
+    app.use("/api/auth", authRateLimiter, authRoutes);
+    app.use("/api/photos", authRateLimiter, authenticateToken, photosRoutes);
+    app.use("/api/data", apiRateLimiter, dataRoutes);
 
     app.listen(PORT, HOST, () => {
       console.log(`Server now running on port: http://${HOST}:${PORT}`);
