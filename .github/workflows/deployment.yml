@@ -22,6 +22,11 @@ jobs:
                 username: ${{ secrets.DOCKERHUB_USERNAME }}
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+            - name: Reset Docker builder to default
+              run: |
+                docker buildx stop || true
+                docker buildx rm default || true
+
             - name: Build and Push Client Image
               run: |
                 echo "VITE_API_URI: ${{ secrets.VITE_API_URI }}"
