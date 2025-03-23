@@ -9,7 +9,6 @@ if (process.env.NODE_ENV === "production" && !process.env.VITE_API_URI) {
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/",
   test: {
     globals: true,
     environment: "jsdom",
