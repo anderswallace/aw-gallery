@@ -21,7 +21,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen mb-10 mt-5">
-      <header className="w-full max-w-[1000px] bg-white fixed top-0 z-10 lg:py-9 sm:py-0 px-5 lg:block">
+      <header className="w-full max-w-[1000px] bg-white fixed top-0 z-10 lg:py-10 sm:py-0 px-5 lg:block">
         <h1 className="lg:text-4xl sm:text-1xl font-bold text-gray-900 mb-10">
           Anders Wallace
         </h1>
