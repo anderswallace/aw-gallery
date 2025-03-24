@@ -15,7 +15,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text"],
-      exclude: ["**/node_modules/**", "**/*.config.*/**"],
+      exclude: ["**/node_modules/**", "**/*.config.*/**", "**/dist/**"],
       all: true,
       // outputDirectory: './coverage',
     },
