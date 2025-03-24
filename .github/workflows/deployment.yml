@@ -29,8 +29,8 @@ jobs:
             echo "client_needs_build=false" >> $GITHUB_OUTPUT
             echo "server_needs_build=false" >> $GITHUB_OUTPUT
 
-            # Get list of files changed between this commit and origin/main
-            CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+            # Get list of files changed between this commit and last commit
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
 
             if echo "$CHANGED_FILES" | grep -q '^client/'; then
               echo "client_needs_build=true" >> $GITHUB_OUTPUT
