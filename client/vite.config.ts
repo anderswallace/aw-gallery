@@ -3,6 +3,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
+if (process.env.NODE_ENV === "production" && !process.env.VITE_API_URI) {
+  throw new Error("VITE_API_URI is not defined at build time.");
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   test: {

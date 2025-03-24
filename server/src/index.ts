@@ -36,13 +36,18 @@ const authRateLimiter = rateLimit({
 const apiRateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 min window
   max: 50,
-  message: "Too many requests. Please slow down.",
+  message: "Too many requests. Please slow down",
 });
 
 async function initializeServer() {
   try {
     //console.log("Checking if database is seeded...");
     //await seed();
+
+    app.use((req, res, next) => {
+      console.log(`[${req.method}] ${req.url}`);
+      next();
+    });
 
     app.use(
       cors({
@@ -59,9 +64,9 @@ async function initializeServer() {
     app.use(cookieParser());
     app.use(express.json());
 
-    app.use("/auth", authRateLimiter, authRoutes);
-    app.use("/photos", authRateLimiter, authenticateToken, photosRoutes);
-    app.use("/data", apiRateLimiter, dataRoutes);
+    app.use("/api/auth", authRateLimiter, authRoutes);
+    app.use("/api/photos", authRateLimiter, authenticateToken, photosRoutes);
+    app.use("/api/data", apiRateLimiter, dataRoutes);
 
     app.listen(PORT, HOST, () => {
       console.log(`Server now running on port: http://${HOST}:${PORT}`);

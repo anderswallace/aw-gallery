@@ -3,11 +3,16 @@ kind: Ingress
 metadata:
   name: client-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - andersgallery.dev
+      secretName: andersgallery-dev-tls
   rules:
-    - host: aw-gallery.local
+    - host: andersgallery.dev
       http:
         paths:
           - path: /
@@ -17,8 +22,8 @@ spec:
                 name: client-service
                 port:
                   number: 80
-          - path: /api
-            pathType: Prefix
+          - path: /api/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: server-service

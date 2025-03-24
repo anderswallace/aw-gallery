@@ -17,6 +17,9 @@ spec:
           image: anderswallace/server:latest
           ports:
             - containerPort: 4002
+          env:
+            - name: PORT
+              value: "4002"
           envFrom:
             - secretRef:
                 name: server-secret
