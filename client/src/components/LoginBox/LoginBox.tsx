@@ -38,7 +38,7 @@ const LoginBox = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.message || "Login failed");
+        setErrorMessage(errorData.message || "Login failed.");
         setOpen(true);
         return;
       }
