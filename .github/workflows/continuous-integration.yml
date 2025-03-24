@@ -25,7 +25,7 @@ jobs:
           echo "client_changed=false" >> $GITHUB_OUTPUT
           echo "server_changed=false" >> $GITHUB_OUTPUT
 
-          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
