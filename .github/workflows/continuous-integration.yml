@@ -5,8 +5,39 @@ on:
     branches:
       - main
 jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      client_changed: ${{ steps.filter.outputs.client_changed }}
+      server_changed: ${{ steps.filter.outputs.server_changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch main branch
+        run: git fetch origin main
+
+      - id: filter
+        run: |
+          echo "client_changed=false" >> $GITHUB_OUTPUT
+          echo "server_changed=false" >> $GITHUB_OUTPUT
+
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+
+          if echo "$CHANGED_FILES" | grep -q '^client/'; then
+            echo "client_changed=true" >> $GITHUB_OUTPUT
+          fi
+
+          if echo "$CHANGED_FILES" | grep -q '^server/'; then
+            echo "server_changed=true" >> $GITHUB_OUTPUT
+          fi
+      
+
   test-client:
     name: Run Client Tests
+    needs: detect-changes
+    if: needs.detect-changes.outputs.client_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,6 +62,8 @@ jobs:
 
   test-server:
     name: Run Server Tests
+    needs: detect-changes
+    if: needs.detect-changes.outputs.server_changed == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -64,6 +97,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-client-node-modules-${{ hashFiles('client/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-client-node-modules-
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -87,6 +128,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: server/node_modules
+          key: ${{ runner.os }}-server-node-modules-${{ hashFiles('server/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-server-node-modules-
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
