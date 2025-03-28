@@ -3,12 +3,14 @@ kind: Ingress
 metadata:
   name: client-ingress
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - andersgallery.dev
+      secretName: andersgallery-dev-tls
   rules:
     - host: andersgallery.dev
       http:
@@ -21,7 +23,7 @@ spec:
                 port:
                   number: 80
           - path: /api/
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: server-service
