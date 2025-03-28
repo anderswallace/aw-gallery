@@ -15,6 +15,7 @@ spec:
       containers:
         - name: server
           image: anderswallace/server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 4002
           env:
