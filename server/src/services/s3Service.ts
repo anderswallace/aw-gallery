@@ -19,7 +19,7 @@ const s3 = new S3Client({
 export const uploadFile = async (photo: Image): Promise<string> => {
   const params = {
     Bucket: config.awsBucketName,
-    Key: `images/${photo.file.originalname}/${photo.id}`,
+    Key: `${config.awsDirectory}/${photo.file.originalname}/${photo.id}`,
     Body: photo.file.buffer,
     ContentType: photo.file.mimetype,
   };

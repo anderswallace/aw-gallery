@@ -17,4 +17,5 @@ export const config = {
   awsBucketName: process.env.AWS_BUCKET_NAME || "bucket_name",
   allowedOrigins: process.env.CORS_ORIGIN || "http://localhost:5173",
   port: process.env.PORT || 4000,
+  awsDirectory: process.env.NODE_ENV === "production" ? "prod" : "test",
 };

@@ -5,6 +5,7 @@ import { Readable } from "stream";
 import { generatePresignedUrl, uploadFile } from "./s3Service";
 import { S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { config } from "../config/config";
 
 // Mock the AWS SDK module inline to avoid hoisting issues.
 vi.mock("@aws-sdk/client-s3", () => {
@@ -93,7 +94,9 @@ describe("s3Service", () => {
 
     const data = await uploadFile(mockPhoto);
 
-    expect(data).toBe(`images/${mockFile.originalname}/${mockPhoto.id}`);
+    expect(data).toBe(
+      `${config.awsDirectory}/${mockFile.originalname}/${mockPhoto.id}`
+    );
   });
 
   test("Return signed url on successful request to AWS", async () => {

@@ -2,6 +2,7 @@ import { Photo, PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { Image } from "../controllers/photosController.js";
 import { generatePresignedUrl } from "./s3Service.js";
+import { config } from "../config/config.js";
 
 const prisma = new PrismaClient();
 
@@ -36,7 +37,7 @@ export const fetchPhotos = async (): Promise<Photo[]> => {
     photos.map(async (photo) => {
       if (new Date(photo.expiresAt) < now) {
         const newUrl = await generatePresignedUrl(
-          `images/${photo.filename}/${photo.id}`
+          `${config.awsDirectory}/${photo.filename}/${photo.id}`
         );
         const updatedExpirationDate = new Date(
           now.getTime() + 1000 * 60 * 60 * 24 * 7
