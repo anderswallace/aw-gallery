@@ -8,7 +8,7 @@ A full-stack image gallery and admin panel for uploading, viewing, and managing 
 - **Backend**: Express.js + TypeScript, Prisma, JWT Auth  
 - **Database**: PostgreSQL (managed in Kubernetes)  
 - **Storage**: AWS S3 Bucket for image uploads  
-- **Infrastructure**: Docker, Kubernetes (EKS)
+- **Infrastructure**: Docker, Kubernetes (K3s)
 - **CI/CD**: GitHub Actions for testing, image builds, and deployment  
 
 ---
@@ -18,5 +18,5 @@ A full-stack image gallery and admin panel for uploading, viewing, and managing 
 - Secure login system (JWT + httpOnly cookies)
 - Image hosting with AWS S3
 - Prisma migrations and PostgreSQL data persistence
-- Fully containerized and deployed to EKS
+- Fully containerized and deployed to local Kubernetes cluster (previously on EKS)
 - Live CI/CD pipeline with GitHub Actions
