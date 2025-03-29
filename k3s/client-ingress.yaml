@@ -3,10 +3,9 @@ kind: Ingress
 metadata:
   name: client-ingress
   annotations:
-    kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    acme.cert-manager.io/http01-edit-in-place: "false"
 spec:
-  ingressClassName: nginx
   tls:
     - hosts:
         - andersgallery.dev
@@ -23,9 +22,10 @@ spec:
                 port:
                   number: 80
           - path: /api/
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: server-service
                 port:
                   number: 4002
+

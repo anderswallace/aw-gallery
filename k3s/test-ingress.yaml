@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-server
+  template:
+    metadata:
+      labels:
+        app: test-server
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        volumeMounts:
+        - name: static-content
+          mountPath: /usr/share/nginx/html/.well-known/acme-challenge
+      volumes:
+      - name: static-content
+        configMap:
+          name: challenge-response
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: challenge-response
+data:
+  test: "Hello from static test path!"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-server
+spec:
+  selector:
+    app: test-server
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: challenge-test-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: andersgallery.dev
+    http:
+      paths:
+      - path: /.well-known/acme-challenge/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: test-server
+            port:
+              number: 80
+
